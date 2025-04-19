@@ -92,7 +92,61 @@
     margin: 2rem auto;
     padding: 0 2rem;
   }
+  .ayuda-btn {
+    position: relative;
+    padding: 0.3rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    
+    border-radius: 50%;
+    width: fit-content;
+    height: 70%;
+    font-size: 20px;
+    cursor: pointer;
+  }
   
+  /* Tooltip base */
+  .ayuda-btn::after {
+    content: attr(data-mensaje);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 4px;
+    white-space: wrap;
+    width: 30dvw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    font-size: 13px;
+  }
+  
+  /* Flechita */
+  .ayuda-btn::before {
+    content: "";
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Mostrar el tooltip al hacer hover o click */
+  .ayuda-btn:hover::after,
+  .ayuda-btn:hover::before,
+  .ayuda-btn.mostrar-tooltip::after,
+  .ayuda-btn.mostrar-tooltip::before {
+    opacity: 1;
+  }
   .container {
     background-color: var(--card-bg);
     border-radius: 8px;
@@ -100,9 +154,16 @@
     margin-bottom: 2rem;
     box-shadow: var(--shadow);
   }
-  
+  .subtitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
   .container h2 {
-    margin-bottom: 1.5rem;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1rem;
     color: var(--secondary-color);
     font-size: 1.5rem;
   }
@@ -137,14 +198,38 @@
   
   .calculos div {
     margin-bottom: 1rem;
+
   }
   
   .calculos label {
-    display: inline-block;
-    width: 60px;
+ 
+    display: flex;
+    width: fit-content;
     margin-bottom: 0.5rem;
+    margin-right: 5px;
+    margin-left: 5px;
+
   }
-  
+  .calculos label button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.1rem 0.1rem;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-left: 0.5rem;
+  }
+  .calculos label button:hover {
+    background-color: var(--secondary-color);
+  }
+  .distanciaVelocidad,
+  .distanciaUnidadesVelocidad,
+  .tiempoVelocidad,
+  .tiempoUnidadesVelocidad {
+    display: flex;
+    align-items: center;
+  }
   .calculos input[type="number"] {
     padding: 0.8rem;
     border: 1px solid var(--border-color);

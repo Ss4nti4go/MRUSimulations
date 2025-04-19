@@ -23,7 +23,24 @@ radios.forEach(radio => {
         mostrarContenedorActivo();
     });
 });
-
+document.querySelectorAll('.ayuda-btn').forEach(boton => {
+    boton.addEventListener('click', (e) => {
+      // Cerrar otros tooltips
+      document.querySelectorAll('.ayuda-btn').forEach(b => {
+        if (b !== boton) b.classList.remove('mostrar-tooltip');
+      });
+  
+      // Alternar este tooltip
+      boton.classList.toggle('mostrar-tooltip');
+    });
+  
+    // Opcional: cerrar tooltip al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!boton.contains(e.target)) {
+        boton.classList.remove('mostrar-tooltip');
+      }
+    });
+  });
 botonCalcular.addEventListener('click', () => {
     resultado = ''; // Reiniciamos el valor de la variable resultado antes de calcular
     const contenedorActivo = obtenerContenedorActivo();
