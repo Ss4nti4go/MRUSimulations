@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador De Encuentros</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Simulador De MRU</h1>
+        </div>
+        <nav>
+            <a href="./index.html">Calculos</a>
+            <a href="./Problemas.html">Problemas MRU</a>
+            <a href="./Encuentros.html">Problemas de Encuentro</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div>
+            <h2>Encuentros</h2>
+            <p>Aquí podrás realizar tus cálculos para los problemas de Encuentro, y también ver una simulación de los
+                mismos</p>
+        </div>
+    </section>
+
+    <main>
+        <section class="calculos">
+            <div class="subtitle">
+                <h2>Ingrese los datos para realizar el cálculo</h2>
+                <button class="ayuda-btn"
+                    data-mensaje="Completa los datos para simular un encuentro entre dos móviles">?</button>
+            </div>
+
+            <div class="container">
+                <input id="posA" placeholder="Posición A" type="number">
+                <select id="unidadPosA">
+                    <option value="m">m</option>
+                    <option value="km">km</option>
+                </select>
+
+                <input id="velA" placeholder="Velocidad A" type="number">
+                <select id="unidadVelA">
+                    <option value="m/s">m/s</option>
+                    <option value="km/h">km/h</option>
+                </select>
+
+                <input id="posB" placeholder="Posición B" type="number">
+                <select id="unidadPosB">
+                    <option value="m">m</option>
+                    <option value="km">km</option>
+                </select>
+
+                <input id="velB" placeholder="Velocidad B" type="number">
+                <select id="unidadVelB">
+                    <option value="m/s">m/s</option>
+                    <option value="km/h">km/h</option>
+                </select>
+
+            </div>
+            <div class="ajuste-escala">
+                <label for="escalaInput">Escala (1 metro equivale a X píxeles):
+                    <button class="ayuda-btn"
+                        data-mensaje="La escala determina cuántos píxeles representa 1 metro en la simulación. Una escala mayor hace que los objetos se muevan más rápido visualmente. Por defecto es 1 píxel = 5 metros">?</button>
+                </label>
+                <div>
+                    <input type="number" id="escalaInput" placeholder="1" min="1" value="1">
+                    <button onclick="ajustarEscala()" id="aplicarEscalaBut" >Aplicar Escala</button>
+                </div>
+             
+            </div>
+            <input type="checkbox" id="activarAutoEscala" name="autoEscala" value="activarAutoEscala" class="radios" >
+            <label for="activarAutoEscala">Activar escala automática</label>
+            <select id="velocidadSimulacion">
+                <option value="1">x1</option>
+                <option value="2">x2</option>
+                <option value="3">x3</option>
+                <option value="4">x4</option>
+                <option value="5">x5</option>
+                <option value="10">x10</option>
+                <option value="50">x50</option>
+            </select>
+            <div class="botones">
+                <button onclick="iniciarSimulacion()">Iniciar Simulación</button>
+                <button id="limpiar">Limpiar</button>
+            </div>
+        </section>
+
+
+    </main>
+    <section>
+        <div class="resultado">
+            <h3>Simulación:</h3>
+            <p id="resultadoEncuentro">El resultado se mostrara aqui</p>
+        </div>
+        <div id="canvas-holder" class="canvas-holder"></div>
+
+    </section>
+    <script src="./js/sketch.js"></script>
+    <script src="./js/scriptEncuentros.js"></script>
+</body>
+
+</html>
