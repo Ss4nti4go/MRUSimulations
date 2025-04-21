@@ -5,9 +5,12 @@ const radios = document.querySelectorAll('.radios');
 const botonCalcular = document.getElementById("calcular");
 const botonLimpiar = document.getElementById("limpiar");
 const resultadoContenedor = document.getElementById("resultado");
+const contenedorResultado = document.getElementsByClassName("resultado")[0];
 
 let resultado = '';
 let modoSeleccionado = 'velocidad';
+let graficoMRU = null;
+
 
 // Función para mostrar solo el contenedor activo
 function mostrarContenedorActivo() {
@@ -66,10 +69,10 @@ botonCalcular.addEventListener('click', () => {
             alert("No se ha seleccionado un modo de cálculo");
             return;
     }
-    const resultadoElement = document.getElementById('resultado');
-     typeWriter(resultadoElement, resultado);
-    
+    typeWriter(resultadoContenedor, resultado);
+    contenedorResultado.classList.add('expandido');  
 });
+
 //Función para obtener el contenedor activo
 const obtenerContenedorActivo = () => {
     const contenedorActivo = {
@@ -83,8 +86,14 @@ const obtenerContenedorActivo = () => {
 botonLimpiar.addEventListener('click', () => {
     const contenedorActivo = obtenerContenedorActivo();
     contenedorActivo.querySelectorAll("input").forEach(input => input.value = '');
-    resultadoContenedor.innerHTML = '';
+    contenedorResultado.classList.remove('expandido');
+    resultadoContenedor.innerText = 'Aqui se mostrará el resultado';
+    if (graficoMRU) {
+        graficoMRU.destroy();
+        graficoMRU = null;
+    }
 });
+
 function calcularVelocidad() {
     const distancia = parseFloat(document.getElementById("distanciaVelocidad").value);
     const tiempo = parseFloat(document.getElementById("tiempoVelocidad").value);
@@ -93,13 +102,16 @@ function calcularVelocidad() {
 
     if (unidadDistancia === "metros" && unidadTiempo === "segundos") {
         const vel = calculoVelocidad(distancia, tiempo);
-        resultado = `${vel.toFixed(2)} m/s lo cual equivale a ${(vel * 3.6).toFixed(2)} km/h`;
+        dibujoGrafica(tiempo, vel, 'Tiempo (seg)', 'Velocidad (m/s)', 'Velocidad en Funcion de Tiempo');
+        resultado = `${vel.toFixed(3)} m/s lo cual equivale a ${(vel * 3.6).toFixed(3)} km/h`;
     } else if (unidadDistancia === "metros" && unidadTiempo === "minutos") {
         const vel = calculoVelocidad(distancia, tiempo * 60);
-        resultado = `${vel.toFixed(2)} m/s lo cual equivale a ${(vel * 3.6).toFixed(2)} km/h`;
+        dibujoGrafica(tiempo, vel, 'Tiempo (min)', 'Velocidad (m/s)', 'Velocidad en Funcion de Tiempo');
+        resultado = `${vel.toFixed(3)} m/s lo cual equivale a ${(vel * 3.6).toFixed(3)} km/h`;
     } else if (unidadDistancia === "kilometros" && unidadTiempo === "horas") {
         const vel = calculoVelocidad(distancia, tiempo);
-        resultado = `${vel.toFixed(2)} km/h lo cual equivale a ${(vel / 3.6).toFixed(2)} m/s`;
+        dibujoGrafica(tiempo, vel, 'Tiempo (h)', 'Velocidad (Km/h)', 'Velocidad en Funcion de Tiempo');
+        resultado = `${vel.toFixed(3)} km/h lo cual equivale a ${(vel / 3.6).toFixed(3)} m/s`;
     } else {
         alert("Estas mezclando unidades, usa: metros/segundos, metros/minutos o kilometros/horas.");
     }
@@ -113,10 +125,10 @@ function calcularTiempo() {
 
     if (unidadDistancia === "metros" && unidadVelocidad === "metrosPorSegundo") {
         const tiempo = calculoTiempo(distancia, velocidad);
-        resultado = `${tiempo.toFixed(2)} s lo cual equivale a ${(tiempo / 60).toFixed(2)} min y ${(tiempo / 3600).toFixed(2)} h`;
+        resultado = `${tiempo.toFixed(3)} s lo cual equivale a ${(tiempo / 60).toFixed(3)} min y ${(tiempo / 3600).toFixed(2)} h`;
     } else if (unidadDistancia === "kilometros" && unidadVelocidad === "kilometrosPorHora") {
         const tiempo = calculoTiempo(distancia, velocidad);
-        resultado = `${tiempo.toFixed(2)} h lo cual equivale a ${(tiempo * 3600).toFixed(2)} s`;
+        resultado = `${tiempo.toFixed(3)} h lo cual equivale a ${(tiempo * 3600).toFixed(3)} s`;
     } else {
         alert("Estas mezclando unidades, usa: metros con m/s o kilómetros con km/h.");
     }
@@ -130,16 +142,61 @@ function calcularDistancia() {
 
     if (unidadVelocidad === "metrosPorSegundo" && unidadTiempo === "segundos") {
         const dist = calculoDistancia(velocidad, tiempo);
-        resultado = `${dist.toFixed(2)} m lo cual equivale a ${(dist / 1000).toFixed(2)} km`;
+        dibujoGrafica(tiempo, dist, 'Tiempo (seg)', 'Distancia (m)', 'Distancia en Funcion de Tiempo');
+        resultado = `${dist.toFixed(3)} m lo cual equivale a ${(dist / 1000).toFixed(3)} km`;
     } else if (unidadVelocidad === "metrosPorSegundo" && unidadTiempo === "minutos") {
         const dist = calculoDistancia(velocidad, tiempo * 60);
-        resultado = `${dist.toFixed(2)} m lo cual equivale a ${(dist / 1000).toFixed(2)} km`;
+        dibujoGrafica(tiempo, dist, 'Tiempo (min)', 'Distancia (m)', 'Distancia en Funcion de Tiempo');
+        resultado = `${dist.toFixed(3)} m lo cual equivale a ${(dist / 1000).toFixed(3)} km`;
     } else if (unidadVelocidad === "kilometrosPorHora" && unidadTiempo === "horas") {
         const dist = calculoDistancia(velocidad, tiempo);
-        resultado = `${dist.toFixed(2)} km lo cual equivale a ${(dist * 1000).toFixed(2)} m`;
+        dibujoGrafica(tiempo, dist, 'Tiempo (h)', 'Distancia (m)', 'Distancia en Funcion de Tiempo');
+        resultado = `${dist.toFixed(3)} km lo cual equivale a ${(dist * 1000).toFixed(3)} m`;
     } else {
         alert("Estas mezclando unidades, usa: m/s y s, m/s y min o km/h y h.");
     }
+}
+
+// FUNCION DIBUJO DE GRAFICAS
+function dibujoGrafica(tiempo, valorY, referenciaTiempo, referenciaY, informacionFuncion) {
+    let tiempoGrafica = [];
+    let valoYArreglo = [];
+
+    if (modoSeleccionado === 'velocidad') {
+        for (let i = 0; i <= tiempo; i++) {
+            tiempoGrafica.push(i);
+            valoYArreglo.push(valorY);
+        }
+    } else if (modoSeleccionado === 'distancia') {
+        for (let i = 0; i <= tiempo; i++) {
+            tiempoGrafica.push(i);
+            valoYArreglo.push((valorY/tiempo)* i);
+        }
+    }
+    if (graficoMRU) {
+        graficoMRU.destroy();
+    }
+
+    const ctx = document.getElementById("grafico").getContext("2d");
+
+    graficoMRU = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: tiempoGrafica,
+            datasets: [{
+                label: informacionFuncion,
+                data: valoYArreglo,
+                borderColor: 'blue',
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: { title: { display: true, text: referenciaTiempo } },
+                y: { title: { display: true, text: referenciaY } }
+            }
+        }
+    });
 }
 
 // FUNCIONES BASE DE FÓRMULAS
