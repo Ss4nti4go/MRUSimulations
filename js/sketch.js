@@ -1,7 +1,7 @@
 // Variables globales
 let posA, velA, posB, velB;
 let xA, xB;
-let escala = 1; 
+let escala = 1;
 let t;
 let tiempoIncremento = 0.0025;
 let simulando = false;
@@ -17,6 +17,7 @@ const multTiempoSimulacion = document.getElementById("velocidadSimulacion");
 const resultado = document.getElementById("resultadoEncuentro");
 const escalaInput = document.getElementById("escalaInput");
 const limpiarBtn = document.getElementById("limpiar");
+
 activarAutoEscalado.addEventListener('change', () => {
   if (activarAutoEscalado.checked) {
     escalaInput.disabled = true;
@@ -60,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
   redrawSimulation();
   // Configurar el botón de limpiar
   limpiarBtn.addEventListener('click', limpiarSimulacion);
-
+  document.getElementById("detenerSimulacion").addEventListener('click', detenerSimulacion);
   // Configurar los botones de ayuda
   const ayudaBtns = document.querySelectorAll('.ayuda-btn');
   ayudaBtns.forEach(btn => {
@@ -72,6 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
   // Inicializar escalaInput con el valor predeterminado
   escalaInput.value = escala;
 });
+
+function detenerSimulacion() {
+  if (simulando) {
+    clearInterval(animacionID);
+    simulando = false;
+  }
+  document.getElementById("velocidadSimulacion").disabled = false;
+}
 
 /**
  * Ajusta la escala manualmente según el valor ingresado por el usuario
@@ -97,29 +106,29 @@ function ajustarEscala() {
 function ajustarEscalaAuto() {
   // Convertir todas las unidades a metros y m/s
 
-    
-    const posAMetros = convertirDistancia(posA, document.getElementById("unidadPosA").value);
-    const posBMetros = convertirDistancia(posB, document.getElementById("unidadPosB").value);
-    const velAMps = convertirVelocidad(velA, document.getElementById("unidadVelA").value);
-    const velBMps = convertirVelocidad(velB, document.getElementById("unidadVelB").value);
 
-    // Calcular la distancia máxima que podrían recorrer en 20 segundos (tiempo arbitrario para visualización)
-    const tiempoSimulacion = 10; // segundos
-    const distanciaMaximaA = posAMetros + Math.abs(velAMps) * tiempoSimulacion;
-    const distanciaMaximaB = posBMetros + Math.abs(velBMps) * tiempoSimulacion;
-    const distanciaTotal = Math.max(distanciaMaximaA, distanciaMaximaB);
+  const posAMetros = convertirDistancia(posA, document.getElementById("unidadPosA").value);
+  const posBMetros = convertirDistancia(posB, document.getElementById("unidadPosB").value);
+  const velAMps = convertirVelocidad(velA, document.getElementById("unidadVelA").value);
+  const velBMps = convertirVelocidad(velB, document.getElementById("unidadVelB").value);
 
-    // Calcular la escala para que la distancia total quepa en el canvas con un margen
-    const margen = 100; // píxeles de margen
-    const nuevaEscala = (canvas.width - margen) / distanciaTotal;
+  // Calcular la distancia máxima que podrían recorrer en 20 segundos (tiempo arbitrario para visualización)
+  const tiempoSimulacion = 10; // segundos
+  const distanciaMaximaA = posAMetros + Math.abs(velAMps) * tiempoSimulacion;
+  const distanciaMaximaB = posBMetros + Math.abs(velBMps) * tiempoSimulacion;
+  const distanciaTotal = Math.max(distanciaMaximaA, distanciaMaximaB);
 
-    // Limitar la escala para que no sea ni muy pequeña ni muy grande
-    escala = Math.min(Math.max(nuevaEscala, 0.1), 50);
+  // Calcular la escala para que la distancia total quepa en el canvas con un margen
+  const margen = 100; // píxeles de margen
+  const nuevaEscala = (canvas.width - margen) / distanciaTotal;
 
-    // Actualizar el input de escala
-    escalaInput.value = escala.toFixed(2);
-    console.log("Escala ajustada automáticamente:", escala, "px por metro");
-    redrawSimulation();
+  // Limitar la escala para que no sea ni muy pequeña ni muy grande
+  escala = Math.min(Math.max(nuevaEscala, 0.1), 50);
+
+  // Actualizar el input de escala
+  escalaInput.value = escala.toFixed(2);
+  console.log("Escala ajustada automáticamente:", escala, "px por metro");
+  redrawSimulation();
 
 }
 /**
@@ -169,11 +178,11 @@ function iniciarSimulacion() {
   posB = convertirDistancia(posBInput, document.getElementById("unidadPosB").value);
   velA = convertirVelocidad(velAInput, document.getElementById("unidadVelA").value);
   velB = convertirVelocidad(velBInput, document.getElementById("unidadVelB").value);
-
+  document.getElementById("velocidadSimulacion").disabled = true;
   // Ajustar escala automáticamente
-  if(activarAutoEscalado.checked){
-  ajustarEscalaAuto();
-  }else{
+  if (activarAutoEscalado.checked) {
+    ajustarEscalaAuto();
+  } else {
     escala = parseFloat(document.getElementById("escalaInput").value);
   }
 
@@ -246,7 +255,11 @@ function draw() {
     escala = 0.1;
   } else {
     if (escala <= 0.3)
-      marcaDistancia = 100;
+      marcaDistancia = 200;
+    else if (escala <= 0.5)
+      marcaDistancia = 75;
+    else 
+      marcaDistancia = 50;
   }
   const pixelesPorMarca = marcaDistancia * escala;
   const centroCanvas = width / 2;
@@ -320,16 +333,16 @@ function draw() {
 
       resultado.textContent = `¡Encuentro! A los ${t.toFixed(2)} s en la posición ${posicionMostrar.toFixed(2)} ${unidadPosOriginal}`;
       resultado.style.color = "green";
-
+      document.getElementById("velocidadSimulacion").disabled = false;
       // Detener simulación después de un breve momento
       if (tiempoEncuentro === null || Math.abs(t - tiempoEncuentro) < 0.1) {
         setTimeout(() => {
           simulando = false;
           cancelAnimationFrame(animacionID);
-        }, 1000);
+        }, 3000);
       }
     }
-    
+
     // Incrementar tiempo
     t += tiempoIncremento;
 
@@ -417,7 +430,7 @@ function limpiarSimulacion() {
   // Limpiar resultado
   resultado.textContent = "El resultado se mostrará aquí";
   resultado.style.color = "inherit";
-
+ document.getElementById("velocidadSimulacion").disabled = false;
   // Redibujar canvas vacío
   t = 0;
   tiempoEncuentro = null;
@@ -454,4 +467,10 @@ function windowResized() {
   } else {
     draw();
   }
+}
+
+function inicioEscala() {
+  escalaInput.value = 1;
+  posAMetros.value = "m"
+
 }
