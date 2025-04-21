@@ -98,15 +98,15 @@ main {
 
 .ayuda-btn {
   position: relative;
-  padding: 0.3rem;
-  background-color: #007bff;
+  padding: 0.2rem;
+  margin-right: 5px;
+  background-color: #2177d3;
   color: white;
   border: none;
-
-  border-radius: 50%;
+  border-radius: 10%;
   width: fit-content;
-  height: 70%;
-  font-size: 20px;
+  height: 50%;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -117,7 +117,7 @@ main {
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #333;
+  background-color: hsl(0, 0%, 20%);
   color: #fff;
   padding: 8px 10px;
   border-radius: 4px;
@@ -152,14 +152,28 @@ main {
   opacity: 1;
 }
 
-.container {
+.containerEncuentros {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.2rem;
   background-color: var(--card-bg);
   border-radius: 8px;
   padding: 2rem;
   margin-bottom: 2rem;
   box-shadow: var(--shadow);
 }
+.container{
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+.container div ,.containerEncuentros div{
 
+  display: flex;
+  align-items: center;
+}
 .subtitle {
   display: flex;
   justify-content: space-between;
@@ -196,7 +210,19 @@ label {
   margin-bottom: 2rem;
   box-shadow: var(--shadow);
 }
-
+#velocidadContenedor , #distanciaContenedor, #tiempoContenedor{
+  display: grid;
+  grid-template-columns: auto;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+}
+.subContenedor{
+  display: flex;
+  align-items: center;
+}
 .calculos h2 {
   margin-bottom: 1.5rem;
   color: var(--secondary-color);
@@ -362,9 +388,13 @@ button {
   width: 100%;
   overflow: hidden;
 }
-
+@media (max-width: 1350px) {
+  .containerEncuentros {
+    grid-template-columns: auto;
+  }
+}
 /* Responsive design */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   header {
     flex-direction: column;
     text-align: center;
@@ -379,7 +409,7 @@ button {
   .calculos input[type="number"] {
     width: 150px;
   }
-
+  
   .botones {
     flex-direction: column;
   }

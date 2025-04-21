@@ -45,7 +45,8 @@
                 <button class="ayuda-btn" data-mensaje="Aquí ingresaras los datos para realizar el cálculo, puedes ingresar los datos en metros o kilómetros, si necesitas más información haz clic en el botón de ayuda de cada dato">?</button>
             </div>
 
-            <div id="velocidadContenedor" style="display: flex;">
+            <div id="velocidadContenedor">
+                <div class="subContenedor">
                 <label for="distanciaVelocidad">Distancia:
                     <button class="ayuda-btn" data-mensaje="Ingresa la distancia total recorrida. Puede estar en metros o kilómetros.">?</button>
                 </label>
@@ -53,11 +54,15 @@
                 <label for="distanciaUnidadesVelocidad">Unidad:
                     <button class="ayuda-btn" data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
                 </label>
+                
                 <select id="distanciaUnidadesVelocidad">
                     <option value="metros">m</option>
                     <option value="kilometros">Km</option>
                 </select>
-            
+            </div>
+            <div class="subContenedor">
+
+        
                 <label for="tiempoVelocidad">Tiempo:
                     <button class="ayuda-btn" data-mensaje="Ingresa cuánto tiempo duró el recorrido.">?</button>
                 </label>
@@ -71,8 +76,10 @@
                     <option value="horas">horas</option>
                 </select>
             </div>
+            </div>
 
             <div id="tiempoContenedor" style="display: none;">
+                <div class="subContenedor">
                 <label for="distanciaTiempo">Distancia:
                     <button class="ayuda-btn" data-mensaje="Ingresa la distancia total recorrida por el objeto.">?</button>
                 </label>
@@ -84,7 +91,8 @@
                     <option value="metros">m</option>
                     <option value="kilometros">Km</option>
                 </select>
-            
+            </div>
+            <div class="subContenedor">
                 <label for="velocidadTiempo">Velocidad:
                     <button class="ayuda-btn" data-mensaje="Indica la velocidad del objeto.">?</button>
                 </label>
@@ -97,7 +105,9 @@
                     <option value="kilometrosPorHora">Km/h</option>
                 </select>
             </div>
+            </div>
             <div id="distanciaContenedor" style="display: none;">
+                <div class="subContenedor">
                 <label for="velocidadDistancia">Velocidad:
                     <button class="ayuda-btn" data-mensaje="Ingresa la velocidad constante a la que se movió el objeto.">?</button>
                 </label>
@@ -109,7 +119,8 @@
                     <option value="metrosPorSegundo">m/s</option>
                     <option value="kilometrosPorHora">Km/h</option>
                 </select>
-            
+            </div>
+            <div class="subContenedor">
                 <label for="tiempoDistancia">Tiempo:
                     <button class="ayuda-btn" data-mensaje="Ingresa el tiempo que duró el desplazamiento.">?</button>
                 </label>
@@ -122,6 +133,7 @@
                     <option value="minutos">min</option>
                     <option value="horas">horas</option>
                 </select>
+            </div>
             </div>
         </section>
 

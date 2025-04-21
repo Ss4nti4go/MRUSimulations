@@ -36,31 +36,45 @@
                     data-mensaje="Completa los datos para simular un encuentro entre dos móviles">?</button>
             </div>
 
-            <div class="container">
-                <input id="posA" placeholder="Posición A" type="number">
-                <select id="unidadPosA">
-                    <option value="m">m</option>
-                    <option value="km">km</option>
-                </select>
+            <div class="containerEncuentros">
+                <div>
+                    <input id="posA" placeholder="Posición A" type="number">
+                    <button class="ayuda-btn"
+                        data-mensaje="Ingresa la posición inicial del objeto A, recuerda que es con respecto al punto medio de la recta, ese seria el cero(punto de referencia)">?</button>
+                    <select id="unidadPosA">
+                        <option value="m">m</option>
+                        <option value="km">km</option>
+                    </select>
+                </div>
+                <div>
 
-                <input id="velA" placeholder="Velocidad A" type="number">
-                <select id="unidadVelA">
-                    <option value="m/s">m/s</option>
-                    <option value="km/h">km/h</option>
-                </select>
 
+                    <input id="velA" placeholder="Velocidad A" type="number">
+                    <button class="ayuda-btn" data-mensaje="Ingresa la velocidad del objeto A">?</button>
+                    <select id="unidadVelA">
+                        <option value="m/s">m/s</option>
+                        <option value="km/h">km/h</option>
+                    </select>
+                </div>
+                <div>
+
+               
                 <input id="posB" placeholder="Posición B" type="number">
+                <button class="ayuda-btn"
+                    data-mensaje="Ingresa la posición inicial del objeto B, recuerda que es con respecto al punto medio de la recta, ese seria el cero(punto de referencia)">?</button>
                 <select id="unidadPosB">
                     <option value="m">m</option>
                     <option value="km">km</option>
                 </select>
-
-                <input id="velB" placeholder="Velocidad B" type="number">
-                <select id="unidadVelB">
-                    <option value="m/s">m/s</option>
-                    <option value="km/h">km/h</option>
-                </select>
-
+            </div>
+                <div>
+                    <input id="velB" placeholder="Velocidad B" type="number">
+                    <button class="ayuda-btn" data-mensaje="Ingresa la velocidad del objeto B">?</button>
+                    <select id="unidadVelB">
+                        <option value="m/s">m/s</option>
+                        <option value="km/h">km/h</option>
+                    </select>
+                </div>
             </div>
             <div class="ajuste-escala">
                 <label for="escalaInput">Escala (1 metro equivale a X píxeles):
@@ -69,11 +83,11 @@
                 </label>
                 <div>
                     <input type="number" id="escalaInput" placeholder="1" min="1" value="1">
-                    <button onclick="ajustarEscala()" id="aplicarEscalaBut" >Aplicar Escala</button>
+                    <button onclick="ajustarEscala()" id="aplicarEscalaBut">Aplicar Escala</button>
                 </div>
-             
+
             </div>
-            <input type="checkbox" id="activarAutoEscala" name="autoEscala" value="activarAutoEscala" class="radios" >
+            <input type="checkbox" id="activarAutoEscala" name="autoEscala" value="activarAutoEscala" class="radios">
             <label for="activarAutoEscala">Activar escala automática</label>
             <select id="velocidadSimulacion">
                 <option value="1">x1</option>

@@ -248,6 +248,7 @@ function draw() {
 
   // Dibujar línea de referencia (eje X)
   stroke(180);
+  text
   line(0, height / 2, width, height / 2);
   //si esta en km que haga marcas cada 1000 metros
   if (document.getElementById("unidadPosB").value === "km" || document.getElementById("unidadPosA").value === "km") {
@@ -285,7 +286,9 @@ function draw() {
   stroke(100);
   line(centroCanvas, height / 2 - 10, centroCanvas, height / 2 + 10);
   fill(100);
-  text("0", centroCanvas, height / 2 + 15);
+  textSize(19);
+  text("0", centroCanvas, height / 2 + 50);
+  
 
   if (simulando) {
     // Calcular posiciones actuales

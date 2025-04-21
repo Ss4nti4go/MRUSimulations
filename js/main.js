@@ -14,9 +14,9 @@ let graficoMRU = null;
 
 // Función para mostrar solo el contenedor activo
 function mostrarContenedorActivo() {
-    ContenedorVelocidad.style.display = (modoSeleccionado === 'velocidad') ? "flex" : "none";
-    ContenedorTiempo.style.display = (modoSeleccionado === 'tiempo') ? "flex" : "none";
-    ContenedorDistancia.style.display = (modoSeleccionado === 'distancia') ? "flex" : "none";
+    ContenedorVelocidad.style.display = (modoSeleccionado === 'velocidad') ? "grid" : "none";
+    ContenedorTiempo.style.display = (modoSeleccionado === 'tiempo') ? "grid" : "none";
+    ContenedorDistancia.style.display = (modoSeleccionado === 'distancia') ? "grid" : "none";
 }
 
 // Evento de cambio de radio
