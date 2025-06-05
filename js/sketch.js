@@ -1,5 +1,6 @@
 // Variables globales
 let posA, velA, posB, velB;
+
 let xA, xB;
 let escala = 1;
 let t;
@@ -7,16 +8,43 @@ let tiempoIncremento = 0.0025;
 let simulando = false;
 let tiempoEncuentro = null;
 let posicionEncuentro = null;
+let tEncuentro = 0;
 let canvas;
+let encontraron = false;
 let animacionID;
 let windowWidth;
-let marcaDistancia;
+let tolerancia = 1;
+let escenarios = "derecha";
+let marcaDistancia = 100;
+let delayB = 0; // Delay del móvil B
+let delayA = 0; // Nueva variable para el delay del móvil A
+
+// Agregar referencias a los inputs de delay (agregar después de las otras constantes)
+const delayBInput = document.getElementById("delayB");
+const delayAInput = document.getElementById("delayA");
+const tiempoSimulado = document.getElementById("tiempo");
+delayAInput.addEventListener('change', () => {
+  delayA = parseFloat(delayAInput.value) || 0;
+  predecirEncuentro();
+});
+const iniciarSimulacionBut = document.getElementById("iniciarSimulacion");
+delayBInput.addEventListener('change', () => {
+  delayB = parseFloat(delayBInput.value) || 0;
+  predecirEncuentro();
+});
+document.querySelectorAll("input[name='escenario']").forEach((radio) => radio.addEventListener("change", () => {
+
+  escenarios = radio.value;
+  predecirEncuentro();
+
+}));
 const aplicarEscalaBut = document.getElementById("aplicarEscalaBut");
 const activarAutoEscalado = document.getElementById("activarAutoEscala");
 const multTiempoSimulacion = document.getElementById("velocidadSimulacion");
 const resultado = document.getElementById("resultadoEncuentro");
 const escalaInput = document.getElementById("escalaInput");
 const limpiarBtn = document.getElementById("limpiar");
+const modoSimulacion = document.getElementById("escenario");
 
 activarAutoEscalado.addEventListener('change', () => {
   if (activarAutoEscalado.checked) {
@@ -26,8 +54,10 @@ activarAutoEscalado.addEventListener('change', () => {
     escalaInput.disabled = false;
     aplicarEscalaBut.disabled = false;
   }
+  predecirEncuentro();
 });
 multTiempoSimulacion.addEventListener('change', () => {
+
   if (multTiempoSimulacion.value == 1) {
     tiempoIncremento = 0.0025;
   }
@@ -51,13 +81,33 @@ multTiempoSimulacion.addEventListener('change', () => {
   if (multTiempoSimulacion.value == 10) {
     tiempoIncremento = 0.1;
   }
-  if (multTiempoSimulacion.value == 50) {
-    tiempoIncremento = 0.5;
+  if (multTiempoSimulacion.value == 25) {
+    tiempoIncremento = 0.2;
+
   }
+  predecirEncuentro()
 })
-document.querySelector('input').addEventListener('change', ajustarEscala);
+const inputs = Array.from(document.getElementsByClassName('datosInput'));
+inputs.forEach(input => {
+  input.addEventListener('change', () => {
+
+    const posAInput = parseFloat(document.getElementById("posA").value);
+    const posBInput = parseFloat(document.getElementById("posB").value);
+
+
+    // Convertir unidades a metros y m/s
+    posA = convertirDistancia(posAInput, document.getElementById("unidadPosA").value);
+    posB = convertirDistancia(posBInput, document.getElementById("unidadPosB").value);
+    redrawSimulation();
+    simulando = false;
+
+
+  });;
+})
 document.querySelector('select').addEventListener('change', redrawSimulation);
 document.addEventListener('DOMContentLoaded', function () {
+
+  ajustarEscala();
   redrawSimulation();
   // Configurar el botón de limpiar
   limpiarBtn.addEventListener('click', limpiarSimulacion);
@@ -76,12 +126,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function detenerSimulacion() {
   if (simulando) {
+
     clearInterval(animacionID);
     simulando = false;
   }
+  resultado.textContent = ``;
   document.getElementById("velocidadSimulacion").disabled = false;
 }
+function drawVelocityArrow(xPos, velocidad, colorFlecha, height) {
+  const largo = Math.max(20, Math.abs(velocidad * escala * 2)); // Largo mínimo para visibilidad
+  const dir = velocidad >= 0 ? 1 : -1;
 
+  stroke(colorFlecha);
+  strokeWeight(2);
+  line(xPos, height / 2, xPos + dir * largo, height / 2);
+
+  // Flecha al final
+  line(xPos + dir * largo, height / 2, xPos + dir * largo - 5 * dir, height / 2 - 5);
+  line(xPos + dir * largo, height / 2, xPos + dir * largo - 5 * dir, height / 2 + 5);
+}
+function drawVectorX(pos, etiqueta, colorLinea, distancia, posTemp, alturaFlechas, posfinal, invertir) {
+  const centroCanvas = width / 2;
+  const xFinal = centroCanvas + pos * escala;
+
+  stroke(colorLinea);
+  strokeWeight(3);
+
+  const dir = xFinal >= centroCanvas ? 1 : -1;
+  if (posTemp) {
+    line(centroCanvas + posTemp * escala, height / 2 + distancia, xFinal, height / 2 + distancia);
+  } else {
+    line(centroCanvas, height / 2 + distancia, xFinal, height / 2 + distancia);
+  }
+
+
+  if (alturaFlechas) {
+    alturaFlechas = distancia
+    if (invertir) {
+      line(xFinal, height / 2 + alturaFlechas, xFinal + 10  , height / 2 - 5 + alturaFlechas);
+      line(xFinal, height / 2 + alturaFlechas, xFinal + 10 , height / 2 + 5 + alturaFlechas);
+    } else {
+      line(xFinal, height / 2 + alturaFlechas, xFinal - 10, height / 2 - 5 + alturaFlechas);
+      line(xFinal, height / 2 + alturaFlechas, xFinal - 10, height / 2 + 5 + alturaFlechas);
+    }
+
+  } else {
+    line(xFinal, height / 2, xFinal - 10 , height / 2 - 5);
+    line(xFinal, height / 2, xFinal - 10 , height / 2 + 5);
+  }
+
+
+  // Etiqueta
+  noStroke();
+  fill(colorLinea);
+  textSize(12);
+  text(etiqueta, (centroCanvas + xFinal) / 2, distancia + height / 2 - 15);
+}
 /**
  * Ajusta la escala manualmente según el valor ingresado por el usuario
  */
@@ -90,46 +190,187 @@ function ajustarEscala() {
   const nuevaEscala = parseFloat(escalaInput.value);
   if (!isNaN(nuevaEscala) && nuevaEscala > 0) {
     escala = nuevaEscala;
-    console.log("Nueva escala aplicada:", escala, "px por metro");
 
+    if (document.getElementById("unidadPosB").value === "km" || document.getElementById("unidadPosA").value === "km") {
+
+
+      if (posicionEncuentro < 1000) {
+        marcaDistancia = 250;
+      }
+      if (escala <= 0.4) {
+        marcaDistancia = 500;
+      }
+      if (escala <= 0.2) {
+        marcaDistancia = 1000;
+      }
+      if (escala <= 0.1) {
+        marcaDistancia = 1000;
+      }
+      if (escala <= 0.05) {
+        marcaDistancia = 2000;
+      }
+      if (escala <= 0.01) {
+        marcaDistancia = 5000;
+      }
+
+    } else {
+      if (posicionEncuentro < 100) {
+        marcaDistancia = 50;
+      }
+      if ((velA + velB) % 2 === 0) {
+        tolerancia = 1;
+      } else {
+        marcaDistancia = 100;
+        tolerancia = (velA + velB) / 2;
+      }
+      if (escala <= 0.4) {
+        marcaDistancia = 500;
+      }
+      if (escala <= 0.2) {
+        marcaDistancia = 1000;
+      }
+      if (escala <= 0.1) {
+        marcaDistancia = 1500;
+      }
+      if (escala <= 0.05) {
+        marcaDistancia = 2000;
+      }
+      if (escala <= 0.01) {
+        marcaDistancia = 5000;
+      }
+    }
     // Si hay una simulación en curso, actualizar la visualización
     if (simulando) {
       redrawSimulation();
     }
   } else {
-    mostrarError("Por favor, ingrese un valor válido y mayor que cero para la escala.");
+    alert("Por favor, ingrese un valor válido y mayor que cero para la escala.");
   }
 }
 /**
  * Ajusta la escala automáticamente basada en las posiciones y velocidades
  */
 function ajustarEscalaAuto() {
-  // Convertir todas las unidades a metros y m/s
-
-
+  // Convertir posiciones y velocidades con sus unidades
   const posAMetros = convertirDistancia(posA, document.getElementById("unidadPosA").value);
   const posBMetros = convertirDistancia(posB, document.getElementById("unidadPosB").value);
-  const velAMps = convertirVelocidad(velA, document.getElementById("unidadVelA").value);
-  const velBMps = convertirVelocidad(velB, document.getElementById("unidadVelB").value);
+  let velAMps = convertirVelocidad(velA, document.getElementById("unidadVelA").value);
+  let velBMps = convertirVelocidad(velB, document.getElementById("unidadVelB").value);
 
-  // Calcular la distancia máxima que podrían recorrer en 20 segundos (tiempo arbitrario para visualización)
-  const tiempoSimulacion = 10; // segundos
-  const distanciaMaximaA = posAMetros + Math.abs(velAMps) * tiempoSimulacion;
-  const distanciaMaximaB = posBMetros + Math.abs(velBMps) * tiempoSimulacion;
-  const distanciaTotal = Math.max(distanciaMaximaA, distanciaMaximaB);
+  // Ajuste de signos según el escenario
+  if (escenarios === 'opuestos') {
+    velAMps = Math.abs(velAMps);
+    velBMps = -Math.abs(velBMps);
+  } else if (escenarios === 'izquierda') {
+    velAMps = -Math.abs(velAMps);
+    velBMps = -Math.abs(velBMps);
+  } else {
+    velAMps = Math.abs(velAMps);
+    velBMps = Math.abs(velBMps);
+  }
+  if (document.getElementById("unidadPosB").value === "km" || document.getElementById("unidadPosA").value === "km") {
+    marcaDistancia = 1000;
+    tolerancia = (posicionEncuentro / tEncuentro) * 1;
 
-  // Calcular la escala para que la distancia total quepa en el canvas con un margen
-  const margen = 100; // píxeles de margen
-  const nuevaEscala = (canvas.width - margen) / distanciaTotal;
+    if (posicionEncuentro < 25000) {
+      escala = 0.01;
+    } else if (posicionEncuentro < 85000) {
+      escala = 0.005;
+    } else if (posicionEncuentro < 500000) {
+      escala = 0.0025;
+    } else if (posicionEncuentro < 1000000) {
+      escala = 0.0001;
+    }
 
-  // Limitar la escala para que no sea ni muy pequeña ni muy grande
-  escala = Math.min(Math.max(nuevaEscala, 0.1), 50);
+    if (posicionEncuentro < 1000) {
+      marcaDistancia = 250;
+    }
+    if (escala <= 0.4) {
+      marcaDistancia = 500;
+    }
+    if (escala <= 0.2) {
+      marcaDistancia = 1000;
+    }
+    if (escala <= 0.1) {
+      marcaDistancia = 1000;
+    }
+    if (escala <= 0.05) {
+      marcaDistancia = 2000;
+    }
+    if (escala <= 0.01) {
+      marcaDistancia = 10000;
+    }
+    if (escala <= 0.001) {
+      marcaDistancia = 50000;
+    }
+    if (escala <= 0.0001) {
+      marcaDistancia = 100000;
+    }
 
-  // Actualizar el input de escala
-  escalaInput.value = escala.toFixed(2);
-  console.log("Escala ajustada automáticamente:", escala, "px por metro");
-  redrawSimulation();
 
+  } else {
+    marcaDistancia = 25
+
+    if ((velA + velB) % 2 === 0) {
+      tolerancia = 1;
+      marcaDistancia = 100;
+    } else {
+
+      tolerancia = (velA + velB) / 2;
+    }
+    if (escala >= 1) {
+      marcaDistancia = 25;
+    }
+    if (escala > 0.4) {
+      marcaDistancia = 50;
+    }
+    if (escala <= 0.4) {
+      marcaDistancia = 500;
+    }
+    if (escala <= 0.2) {
+      marcaDistancia = 1000;
+    }
+    if (escala <= 0.1) {
+      marcaDistancia = 1500;
+    }
+    if (escala <= 0.05) {
+      marcaDistancia = 2000;
+    }
+    if (escala <= 0.01) {
+      marcaDistancia = 5000;
+    }
+    if ((velA + velB) % 2 === 0) {
+      tolerancia = 2;
+    } else {
+
+      tolerancia = 1.5;
+    }
+    {
+    }
+
+    const posEncuentro = posAMetros + velAMps * tEncuentro;
+    const cantidadCeros = Math.floor(Math.log10(posEncuentro));
+
+    // Calcular los extremos de movimiento
+    const posiciones = [posAMetros, posBMetros, posEncuentro];
+    const minPos = Math.min(...posiciones);
+    const maxPos = Math.max(...posiciones);
+    const distanciaTotal = maxPos - minPos;
+
+    // Ajustar la escala al canvas con márgenes
+    const margen = 50; // margen en píxeles
+    const espacioDisponible = canvas.width - 2 * margen;
+    let nuevaEscala = espacioDisponible / distanciaTotal;
+    for (let i = 0; i < cantidadCeros; i++) {
+      nuevaEscala = nuevaEscala / 2;
+    }
+
+    escala = nuevaEscala;
+    escalaInput.value = escala.toFixed(2);
+
+
+    redrawSimulation();
+  }
 }
 /**
  * Convierte una distancia a metros
@@ -161,11 +402,19 @@ function iniciarSimulacion() {
     simulando = false;
   }
 
+  iniciarSimulacionBut.disabled = true;
+  encontraron = false;
+  tiempoEncuentro = null;
+
   // Obtener datos del formulario
   const posAInput = parseFloat(document.getElementById("posA").value);
   const posBInput = parseFloat(document.getElementById("posB").value);
   const velAInput = parseFloat(document.getElementById("velA").value);
   const velBInput = parseFloat(document.getElementById("velB").value);
+
+  // Obtener valores de delay
+  delayA = parseFloat(delayAInput?.value) || 0;
+  delayB = parseFloat(delayBInput?.value) || 0;
 
   // Validar que todos los campos estén completos
   if (isNaN(posAInput) || isNaN(velAInput) || isNaN(posBInput) || isNaN(velBInput)) {
@@ -179,35 +428,32 @@ function iniciarSimulacion() {
   velA = convertirVelocidad(velAInput, document.getElementById("unidadVelA").value);
   velB = convertirVelocidad(velBInput, document.getElementById("unidadVelB").value);
   document.getElementById("velocidadSimulacion").disabled = true;
+
   // Ajustar escala automáticamente
   if (activarAutoEscalado.checked) {
     ajustarEscalaAuto();
   } else {
-    escala = parseFloat(document.getElementById("escalaInput").value);
+    ajustarEscala();
   }
 
-  // Calcular el punto de encuentro
-  const encuentro = calcularEncuentro();
-
-  if (encuentro) {
-    tiempoEncuentro = encuentro.tiempo;
-    posicionEncuentro = encuentro.posicion;
-
-    // Mostrar resultado con unidades originales
-    const unidadPosOriginal = document.getElementById("unidadPosA").value;
-    const posicionMostrar = unidadPosOriginal === "km" ? posicionEncuentro / 1000 : posicionEncuentro;
-
-    resultado.textContent = `Se encontrarán a los ${tiempoEncuentro.toFixed(2)} s en la posición ${posicionMostrar.toFixed(2)} ${unidadPosOriginal}`;
-    resultado.style.color = "green";
-  } else {
-    tiempoEncuentro = null;
-    posicionEncuentro = null;
-    resultado.textContent = "No se detecta un encuentro con los datos proporcionados.";
-    resultado.style.color = "orange";
-  }
-
-  // Reiniciar simulación
   t = 0;
+
+
+
+  if (escenarios === 'opuestos') {
+    velA = Math.abs(velA);
+    velB = -Math.abs(velB);
+  } else if (escenarios === 'izquierda') {
+    velA = Math.abs(velA) * -1;
+    velB = Math.abs(velB) * -1;
+  } else {
+    velA = Math.abs(velA);
+    velB = Math.abs(velB);
+  }
+
+
+
+  // Iniciar simulación
   simulando = true;
 
   // Iniciar la animación
@@ -239,29 +485,112 @@ function setup() {
   textAlign(CENTER, CENTER);
   textSize(14);
 }
+function dibujarVectorVelocidad(vel, escala) {
+  let x = width / 2 + vel * escala;
+  let dx = vel * escala * 1.5; // longitud proporcional a la velocidad
+  let endX = x + dx;
 
+  stroke(0);  // Ajustar el color si es necesario
+  strokeWeight(2);
+  line(x, height / 2, endX, height / 2);
+
+  // Flecha
+  push();
+  translate(endX, height / 2);
+  let angulo = dx >= 0 ? 0 : PI;
+  rotate(angulo);
+  fill(0);  // Ajustar el color si es necesario
+  noStroke();
+  triangle(0, -5, 0, 5, 10 * (dx >= 0 ? 1 : -1), 0);
+  pop();
+  strokeWeight(1);
+}
 /**
  * Dibuja un frame de la simulación
  */
+
+function predecirEncuentro() {
+  // Asegurarse que los valores estén cargados
+  const posAInput = parseFloat(document.getElementById("posA").value);
+  const posBInput = parseFloat(document.getElementById("posB").value);
+  const velAInput = parseFloat(document.getElementById("velA").value);
+  const velBInput = parseFloat(document.getElementById("velB").value);
+  const delayAValue = parseFloat(delayAInput?.value) || 0;
+  const delayBValue = parseFloat(delayBInput?.value) || 0;
+
+  if (isNaN(posAInput) || isNaN(velAInput) || isNaN(posBInput) || isNaN(velBInput)) return;
+
+  // Convertir unidades a m y m/s
+  const pA = convertirDistancia(posAInput, document.getElementById("unidadPosA").value);
+  const pB = convertirDistancia(posBInput, document.getElementById("unidadPosB").value);
+  let vA = convertirVelocidad(velAInput, document.getElementById("unidadVelA").value);
+  let vB = convertirVelocidad(velBInput, document.getElementById("unidadVelB").value);
+
+  if (escenarios === 'opuestos') {
+    vA = Math.abs(vA);
+    vB = -Math.abs(vB);
+  } else if (escenarios === 'izquierda') {
+    vA = -Math.abs(vA);
+    vB = -Math.abs(vB);
+  } else {
+    vA = Math.abs(vA);
+    vB = Math.abs(vB);
+  }
+
+  const denominador = vA - vB;
+  if (denominador === 0) {
+    resultado.textContent = "Los móviles no se encontrarán (misma velocidad).";
+    resultado.style.color = "orange";
+    return;
+  }
+
+  // Ecuación considerando ambos delays:
+  // Si t es el tiempo de encuentro desde el inicio de la simulación:
+  // pA + vA * (t - delayA) = pB + vB * (t - delayB)
+  // pA + vA * t - vA * delayA = pB + vB * t - vB * delayB
+  // vA * t - vB * t = pB - pA - vB * delayB + vA * delayA
+  // (vA - vB) * t = pB - pA - vB * delayB + vA * delayA
+  // t = (pB - pA - vB * delayB + vA * delayA) / (vA - vB)
+
+  tEncuentro = (pB - pA - vB * delayBValue + vA * delayAValue) / (vA - vB);
+
+  // Verificar que el encuentro ocurra después de que ambos móviles hayan comenzado a moverse
+  if (tEncuentro < 0 || tEncuentro < delayAValue || tEncuentro < delayBValue) {
+    resultado.textContent = "Los móviles no se encontrarán.";
+    resultado.style.color = "orange";
+    return;
+  }
+
+  // La posición de encuentro es la posición del móvil A en el tiempo de encuentro
+  const posEncuentro = pA + vA * (tEncuentro - delayAValue);
+  posicionEncuentro = posEncuentro;
+  const unidad = document.getElementById("unidadPosA").value;
+  const posMostrada = unidad === "km" ? (posEncuentro / 1000).toFixed(2) : posEncuentro.toFixed(2);
+  resultado.textContent = `Encuentro estimado: en t = ${tEncuentro.toFixed(2)} s, posición = ${posMostrada} ${unidad}`;
+  resultado.style.color = "green";
+}
+
 function draw() {
   background(240);
 
   // Dibujar línea de referencia (eje X)
   stroke(180);
-  text
+  if (tolerancia > 5) tolerancia = 5;
   line(0, height / 2, width, height / 2);
-  //si esta en km que haga marcas cada 1000 metros
-  if (document.getElementById("unidadPosB").value === "km" || document.getElementById("unidadPosA").value === "km") {
-    marcaDistancia = 1000;
-    escala = 0.1;
-  } else {
-    if (escala <= 0.3)
-      marcaDistancia = 200;
-    else if (escala <= 0.5)
-      marcaDistancia = 75;
-    else 
-      marcaDistancia = 50;
+
+  //drawVectorX(pos, etiqueta, colorLinea, distancia, posTemp, alturaFlechas, posfinal, invertir)
+  if(posA<0){
+    drawVectorX(posA, "Xi A", color(255, 100, 0), 0, null, 0.5, null, true);
+  }else{
+    drawVectorX(posA, "Xi A", color(255, 100, 0), 0, null, 0.5, null, false);
   }
+  
+  if(posB<0){
+    drawVectorX(posB, "Xi B", color(0, 100, 255), -10, null, 1, null, true);
+  }else{
+    drawVectorX(posB, "Xi B", color(0, 100, 255), -10, null, 1, null, false);
+  }
+
   const pixelesPorMarca = marcaDistancia * escala;
   const centroCanvas = width / 2;
   stroke(200);
@@ -288,16 +617,16 @@ function draw() {
   fill(100);
   textSize(19);
   text("0", centroCanvas, height / 2 + 50);
-  
 
   if (simulando) {
-    // Calcular posiciones actuales
-    const posActualA = posA + velA * t;
-    const posActualB = posB + velB * t;
+    // Calcular posiciones actuales considerando los delays
+    const posActualA = t >= delayA ? posA + velA * (t - delayA) : posA;
+    const posActualB = t >= delayB ? posB + velB * (t - delayB) : posB;
 
     // Convertir a coordenadas de pantalla (centradas en el canvas)
     xA = centroCanvas + posActualA * escala;
     xB = centroCanvas + posActualB * escala;
+    textSize(20);
 
     // Dibujar móvil A (rojo)
     fill(255, 100, 100);
@@ -313,99 +642,91 @@ function draw() {
     fill(0);
     text("B", xB, height / 2 + 20);
 
-    // Mostrar velocidades
+    // Mostrar velocidades o mensajes de espera
     fill(255, 100, 100);
-    text(`v = ${velA.toFixed(2)} m/s`, xA, height / 2 - 40);
+    if (t < delayA) {
+      text(`Esperando ${(delayA - t).toFixed(2)}s`, xA, height / 2 - 40);
+    } else {
+      text(`v = ${velA.toFixed(2)} m/s`, xA, height / 2 - 40);
+    }
+
     fill(100, 100, 255);
-    text(`v = ${velB.toFixed(2)} m/s`, xB, height / 2 + 40);
+    if (t < delayB) {
+      text(`Esperando ${(delayB - t).toFixed(2)}s`, xB, height / 2 + 40);
+    } else {
+      text(`v = ${velB.toFixed(2)} m/s`, xB, height / 2 + 40);
+    }
 
     // Verificar si hay encuentro
-    const distanciaActual = Math.abs(posActualA - posActualB);
-    const tolerancia = 0.1; // metros de tolerancia para detectar encuentro
+    let distanciaActual = Math.abs(posActualA - posActualB);
+    // metros de tolerancia para detectar encuentro
 
-    if (distanciaActual < tolerancia) {
+    if (distanciaActual < tolerancia && t >= delayA && t >= delayB) {
       // Marcar punto de encuentro
       fill(0, 200, 0);
       noStroke();
       ellipse((xA + xB) / 2, height / 2, 20, 20);
-
+      encontraron = true;
       // Mostrar mensaje de encuentro
       const posEncuentro = (posActualA + posActualB) / 2;
-      const unidadPosOriginal = document.getElementById("unidadPosA").value;
-      const posicionMostrar = unidadPosOriginal === "km" ? posEncuentro / 1000 : posEncuentro;
-
-      resultado.textContent = `¡Encuentro! A los ${t.toFixed(2)} s en la posición ${posicionMostrar.toFixed(2)} ${unidadPosOriginal}`;
-      resultado.style.color = "green";
-      document.getElementById("velocidadSimulacion").disabled = false;
-      // Detener simulación después de un breve momento
-      if (tiempoEncuentro === null || Math.abs(t - tiempoEncuentro) < 0.1) {
-        setTimeout(() => {
-          simulando = false;
-          cancelAnimationFrame(animacionID);
-        }, 3000);
+      console.log(posA, posB, posEncuentro);
+      console.log(velA);
+      console.log(velB);
+      if (velA < 0) {
+        drawVectorX(posEncuentro, "Xf-A", color(0, 200, 100), 75, posA, 1, posEncuentro, true);
+      } else {
+        drawVectorX(posEncuentro, "Xf-A", color(0, 200, 100), 75, posA, 1, posEncuentro, false);
       }
+
+      if (velB < 0) {
+        drawVectorX(posEncuentro, "Xf-B", color(0, 100, 50), -75, posB, 1, posEncuentro, true);
+      } else {
+        drawVectorX(posEncuentro, "Xf-B", color(0, 100, 50), -75, posB, 1, posEncuentro, false);
+      }
+      // drawVectorX(posEncuentro, "Xf-A", color(0, 200, 100), 75,  posA, 1, posEncuentro, velA);
+      // drawVectorX(posEncuentro, "Xf-B", color(0, 100, 50),-75, posB, 1, posEncuentro, velB);
+      iniciarSimulacionBut.disabled = false;
+      multTiempoSimulacion.disabled = false;
     }
 
+    tiempoSimulado.textContent = `Tiempo simulado: ${t.toFixed(2)} s`;
     // Incrementar tiempo
-    t += tiempoIncremento;
+    if (!encontraron) t += tiempoIncremento
+    else {
+      tiempoSimulado.textContent = `Tiempo simulado: ${tEncuentro.toFixed(2)} s`;
+    }
 
     // Detener si los móviles salen del canvas
     if (xA < -50 || xA > width + 50 || xB < -50 || xB > width + 50) {
-      if (t > 10) { // Solo detener después de cierto tiempo para dar oportunidad al encuentro
+      if (t > 20) { // Solo detener después de cierto tiempo para dar oportunidad al encuentro
         simulando = false;
         cancelAnimationFrame(animacionID);
-        resultado.textContent += " (Los móviles han salido del área visible)";
       }
     }
   } else {
     // Mostrar posición inicial cuando no hay simulación
     const centroCanvas = width / 2;
-
+    textSize(20);
     // Dibujar móvil A (rojo)
     fill(255, 100, 100);
     noStroke();
-    ellipse(centroCanvas, height / 2 - 20, 30, 30);
+    ellipse((centroCanvas + posA * escala) || centroCanvas, height / 2 - 20, 30, 30);
     fill(0);
-    text("A", centroCanvas, height / 2 - 20);
+    text("A", (centroCanvas + posA * escala) || centroCanvas, height / 2 - 20);
 
     // Dibujar móvil B (azul)
     fill(100, 100, 255);
     noStroke();
-    ellipse(centroCanvas, height / 2 + 20, 30, 30);
+    ellipse((centroCanvas + posB * escala) || centroCanvas, height / 2 + 20, 30, 30);
     fill(0);
-    text("B", centroCanvas, height / 2 + 20);
+    text("B", (centroCanvas + posB * escala) || centroCanvas, height / 2 + 20);
 
     // Instrucciones
     fill(80);
-    textSize(14);
+    textSize(20);
+    iniciarSimulacionBut.disabled = false;
     text("Ingresa los datos y presiona 'Iniciar Simulación'", width / 2, height / 2 - 60);
   }
-}
-
-/**
- * Calcula si hay un encuentro entre los dos móviles
- */
-function calcularEncuentro() {
-  // Si las velocidades son iguales, solo hay encuentro si las posiciones son iguales
-  if (velA === velB) {
-    if (posA === posB) {
-      return { tiempo: 0, posicion: posA };
-    }
-    return null;
-  }
-
-  // Calcular tiempo de encuentro: t = (posB - posA) / (velA - velB)
-  const tiempo = (posB - posA) / (velA - velB);
-
-  // Si el tiempo es negativo, el encuentro ya ocurrió en el pasado
-  if (tiempo < 0) {
-    return null;
-  }
-
-  // Calcular posición de encuentro
-  const posicion = posA + velA * tiempo;
-
-  return { tiempo, posicion };
 }
 
 /**
@@ -423,6 +744,12 @@ function limpiarSimulacion() {
   document.getElementById("velA").value = "";
   document.getElementById("posB").value = "";
   document.getElementById("velB").value = "";
+  if (delayBInput) {
+    delayBInput.value = "0";
+  }
+  if (delayAInput) {
+    delayAInput.value = "0";
+  }
 
   // Restablecer unidades
   document.getElementById("unidadPosA").selectedIndex = 0;
@@ -433,18 +760,21 @@ function limpiarSimulacion() {
   // Limpiar resultado
   resultado.textContent = "El resultado se mostrará aquí";
   resultado.style.color = "inherit";
- document.getElementById("velocidadSimulacion").disabled = false;
+  document.getElementById("velocidadSimulacion").disabled = false;
+
   // Redibujar canvas vacío
   t = 0;
+  delayA = 0;
+  delayB = 0;
   tiempoEncuentro = null;
   posicionEncuentro = null;
   draw();
 }
-
 /**
  * Redibuja la simulación con la nueva escala
  */
 function redrawSimulation() {
+  predecirEncuentro()
   if (!simulando) return;
   draw();
 }
@@ -476,4 +806,16 @@ function inicioEscala() {
   escalaInput.value = 1;
   posAMetros.value = "m"
 
+}
+function reiniciarSimulacion() {
+  cancelAnimationFrame(animacionID);
+  t = 0;
+  simulando = false;
+  xA = null;
+  xB = null;
+  tiempoEncuentro = null;
+  posicionEncuentro = null;
+  encontraron = false;
+  predecirEncuentro();
+  draw();
 }

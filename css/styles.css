@@ -18,13 +18,56 @@
   box-sizing: border-box;
 }
 
+[type=radio] { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.radioMRU {
+  position:relative;
+  opacity: 100;
+  width: auto;
+  height: auto;
+}
+
+[type=radio] {
+  width: 50px;
+}
+/* IMAGE STYLES */
+[type=radio] + img {
+  cursor: pointer;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img {
+  outline: 2px solid #f00;
+  box-shadow: 0 3px 5px 5px #0000008a;
+}
+.containerEscenarios label img {
+  width: 18dvw;
+  height: 12dvw;
+  min-width: 200px;
+  min-height: 150px;
+}
+.containerEscenarios{
+  display: flex;
+  gap: 20px;
+}
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--background-color);
   color: var(--text-color);
   line-height: 1.6;
+  overflow-x: hidden;
 }
+.secondMenu{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 
+  gap: 20px;
+}
 /* Header */
 header {
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -35,6 +78,7 @@ header {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  overflow-x: hidden;
 }
 
 header h1 {
@@ -91,7 +135,7 @@ select {
 /* Main contentenido */
 main {
 
-  max-width: 60%;
+  max-width: 80%;
   margin: 2rem auto;
   padding: 0 2rem;
 }
@@ -129,7 +173,15 @@ main {
   z-index: 1000;
   font-size: 13px;
 }
-
+.auto-escala{
+  box-shadow: var(--shadow); 
+  display: flex;
+  gap: 10px;
+}
+#activarAutoEscala{
+  width: 25%;
+  margin: auto;
+}
 /* Flechita */
 .ayuda-btn::before {
   content: "";
@@ -265,6 +317,29 @@ label {
 .tiempoUnidadesVelocidad {
   display: flex;
   align-items: center;
+}
+
+.contenedorDistanciaYTiempoEnVelocidad, .contenedorDistanciaYVelocidadEnTiempo, .contenedorVelocidadYTiempoEnDistancia{
+  display: flex;
+  flex-direction: column ; 
+}
+
+.contenedorDistancia, .contenedorVelocidadDistancia{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: center;
+  justify-content: center;
+}
+
+.contenedorDistancia button {
+  margin: auto;
+}
+
+.contenedorTiempo, .contenedorVelocidadEnTiempo, .contenedorTiempoDistancia{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .calculos input[type="number"] {

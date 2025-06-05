@@ -35,10 +35,31 @@
                 <button class="ayuda-btn"
                     data-mensaje="Completa los datos para simular un encuentro entre dos móviles">?</button>
             </div>
-
+            <div style="display: flex;">
+                <div style="margin-right: 20px;">
+                    <label for="escenario">Escenario:</label>
+                    <div class="containerEscenarios">
+                        <label>
+                            <input type="radio" name="escenario" value="opuestos"  >
+                            <img src="./src/DireccionesOpuestas.PNG" alt="Option 1">
+                          </label>
+                          <label>
+                            <input type="radio" name="escenario" value="izquierda">
+                            <img src="./src/Izquierda.PNG"  alt="Option 1">
+                          </label>
+                          <label>
+                            <input type="radio" name="escenario" value="derecha" checked>
+                            <img src="./src/Derecha.PNG" alt="Option 1">
+                          </label>
+                    </div>
+               
+        
+                </div>
+             
+            </div>
             <div class="containerEncuentros">
                 <div>
-                    <input id="posA" placeholder="Posición A" type="number">
+                    <input id="posA" class="datosInput" placeholder="Posición A" type="number" value="0">
                     <button class="ayuda-btn"
                         data-mensaje="Ingresa la posición inicial del objeto A, recuerda que es con respecto al punto medio de la recta, ese seria el cero(punto de referencia)">?</button>
                     <select id="unidadPosA">
@@ -49,7 +70,7 @@
                 <div>
 
 
-                    <input id="velA" placeholder="Velocidad A" type="number">
+                    <input id="velA" class="datosInput" placeholder="Velocidad A" type="number" value="5">
                     <button class="ayuda-btn" data-mensaje="Ingresa la velocidad del objeto A">?</button>
                     <select id="unidadVelA">
                         <option value="m/s">m/s</option>
@@ -58,8 +79,8 @@
                 </div>
                 <div>
 
-               
-                <input id="posB" placeholder="Posición B" type="number">
+                    <div>
+                <input id="posB" class="datosInput" placeholder="Posición B" type="number" value="50">
                 <button class="ayuda-btn"
                     data-mensaje="Ingresa la posición inicial del objeto B, recuerda que es con respecto al punto medio de la recta, ese seria el cero(punto de referencia)">?</button>
                 <select id="unidadPosB">
@@ -67,8 +88,9 @@
                     <option value="km">km</option>
                 </select>
             </div>
+            </div>
                 <div>
-                    <input id="velB" placeholder="Velocidad B" type="number">
+                    <input id="velB" class="datosInput" placeholder="Velocidad B" type="number">
                     <button class="ayuda-btn" data-mensaje="Ingresa la velocidad del objeto B">?</button>
                     <select id="unidadVelB">
                         <option value="m/s">m/s</option>
@@ -76,7 +98,11 @@
                     </select>
                 </div>
             </div>
+            <section class="secondMenu">
             <div class="ajuste-escala">
+                <div>
+
+           
                 <label for="escalaInput">Escala (1 metro equivale a X píxeles):
                     <button class="ayuda-btn"
                         data-mensaje="La escala determina cuántos píxeles representa 1 metro en la simulación. Una escala mayor hace que los objetos se muevan más rápido visualmente. Por defecto es 1 píxel = 5 metros">?</button>
@@ -87,8 +113,15 @@
                 </div>
 
             </div>
-            <input type="checkbox" id="activarAutoEscala" name="autoEscala" value="activarAutoEscala" class="radios">
-            <label for="activarAutoEscala">Activar escala automática</label>
+            <div class="auto-escala">
+                <label for="activarAutoEscala">Activar escala automática</label>
+                <input type="checkbox" id="activarAutoEscala" name="autoEscala" value="activarAutoEscala" class="radios">
+                
+            </div>
+           
+        </div>
+        <div>
+            <label for="velocidadSimulacion">Velocidad de Simulación:</label>
             <select id="velocidadSimulacion">
                 <option value="1">x1</option>
                 <option value="2">x2</option>
@@ -96,13 +129,29 @@
                 <option value="4">x4</option>
                 <option value="5">x5</option>
                 <option value="10">x10</option>
-                <option value="50">x50</option>
+                <option value="25">x25</option>
+
             </select>
+        </div>
+        <div>
             <div class="botones">
-                <button onclick="iniciarSimulacion()" class="botonAcciones">Iniciar Simulación</button>
+                <button onclick="iniciarSimulacion()" class="botonAcciones" id="iniciarSimulacion">Iniciar Simulación</button>
                 <button id="limpiar" class="botonAcciones">Limpiar</button>
                 <button id="detenerSimulacion" class="botonAcciones">Detener Simulación</button>
             </div>
+            <div>
+                <div>
+                    <label for="delayB">Retraso del móvil B (segundos):</label>
+                    <input id="delayB" class="datosInput" placeholder="Retraso" type="number" value="0" min="0" step="0.1">
+                    <button class="ayuda-btn" data-mensaje="Tiempo que tardará el móvil B en comenzar a moverse">?</button>
+                </div>
+                <div>
+                    <label for="delayA">Retraso del móvil A (segundos):</label>
+                    <input id="delayA" class="datosInput" placeholder="Retraso" type="number" value="0" min="0" step="0.1">
+                    <button class="ayuda-btn" data-mensaje="Tiempo que tardará el móvil A en comenzar a moverse">?</button>
+                </div>
+            </div>
+        </section>
         </section>
 
 
@@ -110,6 +159,7 @@
     <section>
         <div class="resultado">
             <h3>Simulación:</h3>
+            <p id="tiempo"></p>
             <p id="resultadoEncuentro">El resultado se mostrara aqui</p>
         </div>
         <div id="canvas-holder" class="canvas-holder"></div>
