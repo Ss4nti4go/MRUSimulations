@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="viewport" content="width=1024">
     <title>Simulador De Encuentros</title>
     <link rel="stylesheet" href="./css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
@@ -59,6 +59,7 @@
             </div>
             <div class="containerEncuentros">
                 <div>
+                    <label for="posA">Posición A</label>
                     <input id="posA" class="datosInput" placeholder="Posición A" type="number" value="0">
                     <button class="ayuda-btn"
                         data-mensaje="Ingresa la posición inicial del objeto A, recuerda que es con respecto al punto medio de la recta, ese seria el cero(punto de referencia)">?</button>
@@ -68,8 +69,7 @@
                     </select>
                 </div>
                 <div>
-
-
+                    <label for="velA">Velocidad A</label>
                     <input id="velA" class="datosInput" placeholder="Velocidad A" type="number" value="5">
                     <button class="ayuda-btn" data-mensaje="Ingresa la velocidad del objeto A">?</button>
                     <select id="unidadVelA">
@@ -80,6 +80,7 @@
                 <div>
 
                     <div>
+                        <label for="posB">Posición B</label>
                 <input id="posB" class="datosInput" placeholder="Posición B" type="number" value="50">
                 <button class="ayuda-btn"
                     data-mensaje="Ingresa la posición inicial del objeto B, recuerda que es con respecto al punto medio de la recta, ese seria el cero(punto de referencia)">?</button>
@@ -90,6 +91,7 @@
             </div>
             </div>
                 <div>
+                    <label for="velB">Velocidad B</label>
                     <input id="velB" class="datosInput" placeholder="Velocidad B" type="number">
                     <button class="ayuda-btn" data-mensaje="Ingresa la velocidad del objeto B">?</button>
                     <select id="unidadVelB">
