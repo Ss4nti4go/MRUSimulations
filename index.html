@@ -1,266 +1,294 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
-   <meta name="viewport" content="">
-    <title>SimuladorMRU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador MRU - Inicio</title>
     <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="./css/animations.css">
 </head>
 
 <body>
     <header>
         <div>
-            <h1>Simulador De MRU</h1>
+            <h1 class="fade-in-up">Simulador De MRU</h1>
+            <p class="subtitle fade-in-up delay-1">Movimiento Rectilíneo Uniforme</p>
         </div>
         <nav>
-            <a href="./inicio.html">Inicio</a>
-            <a href="./index.html">Problemas MRU</a>
+            <a href="./index.html" class="nav-active">Inicio</a>
+            <a href="./problemas.html">Problemas MRU</a>
             <a href="./Encuentros.html">Problemas de Encuentro</a>
         </nav>
     </header>
-    <section class="hero">
-        <div>
-            <h2>Problemas MRU</h2>
-            <p>Aquí podras realizar tus calculos para los problemas de MRU</p>
+
+    <section class="hero hero-inicio">
+        <div class="hero-content fade-in-up delay-2">
+            <h2 class="hero-title">Aprende Movimiento Rectilíneo Uniforme</h2>
+            <p class="hero-description fade-in-up delay-3">
+                Descubre los conceptos fundamentales del MRU a través de simulaciones interactivas y ejemplos prácticos
+            </p>
+            <div class="hero-buttons fade-in-up delay-4">
+                <a href="./index.html" class="btn-primary">Resolver Problemas</a>
+                <a href="./Encuentros.html" class="btn-secondary">Simular Encuentros</a>
+            </div>
+        </div>
+        
+        <!-- Animación MRU en el Hero -->
+        <div class="mru-animation">
+            <div class="animation-track">
+                <div class="moving-object" id="heroObject"></div>
+                <div class="track-line"></div>
+                <div class="position-markers">
+                    <span class="marker">0m</span>
+                    <span class="marker">100m</span>
+                    <span class="marker">200m</span>
+                    <span class="marker">250m</span>
+                    <span class="marker">300m</span>
+                </div>
+            </div>
+            <div class="animation-info">
+                <span id="velocityDisplay">v = 25 m/s</span>
+                <span id="timeDisplay">t = 0.0 s</span>
+                <span id="positionDisplay">x = 0 m</span>
+            </div>
         </div>
     </section>
+
     <main>
-        <div class="container">
-            <div class="subtitle">
-                <h2>Selecciona que calculo deseas</h2>
-                <button class="ayuda-btn" data-mensaje="Aquí seleccionaras el cálculo que deseas realizar">?</button>
-            </div>
-            <input class="radioMRU" type="radio" id="velocidadRadios" name="calculos" value="velocidad" class="radios" checked>
-            <label for="velocidad">Velocidad</label>
-            <input class="radioMRU" type="radio" id="tiempoRadios" name="calculos" value="tiempo" class="radios">
-            <label for="tiempo">Tiempo</label>
-            <input class="radioMRU" type="radio" id="distanciaRadios" name="calculos" value="distancia" class="radios">
-            <label for="desplazamiento">Desplazamiento</label>
-
-        </div>
-
-        <section class="calculos">
-            <div class="subtitle">
-                <h2>Ingrese los datos para realizar el calculo</h2>
-                <button class="ayuda-btn"
-                    data-mensaje="Aquí ingresaras los datos para realizar el cálculo, puedes ingresar los datos en metros o kilómetros, si necesitas más información haz clic en el botón de ayuda de cada dato">?</button>
-            </div>
-
-            <div id="velocidadContenedor" style="display: flex;">
-                <div class="contenedorDistanciaYTiempoEnVelocidad">
-                    <div class="contenedorDistancia">
-                        <label for="posicionInicialVelocidad">Posicion Inicial:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa la posicion inicial del objeto. Puede estar en metros o kilómetros.">?</button>
-                        </label>
-
-                        <input type="number" id="posicionInicialVelocidad" placeholder="Posicion Inicial">
-                        <label for="distanciaUnidadesVelocidad">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
-                        </label>
-                        <select id="distanciaUnidadesVelocidad">
-                            <option value="metros">m</option>
-                            <option value="kilometros">Km</option>
-                        </select>
-
-                        <label for="sentidoPosicionInicialVelocidad">Sentido:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa el sentido de la posicion inicial del objeto.">?</button>
-                        </label>
-
-                        <select id="sentidoPosicionInicialVelocidad">
-                            <option value="izquierda">Izquierda</option>
-                            <option value="derecha">Derecha</option>
-                        </select>
-
-                        <label for="posicionFinalVelocidad">Posicion Final:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa la posicion final del objeto. Puede estar en metros o kilómetros.">?</button>
-                        </label>
-
-                        <input type="number" id="posicionFinalVelocidad" placeholder="Posicion Final">
-                        <label for="distanciaUnidadesVelocidad">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
-                        </label>
-                        <select id="distanciaUnidadesVelocidad">
-                            <option value="metros">m</option>
-                            <option value="kilometros">Km</option>
-                        </select>
-
-                        <label for="sentidoPosicionFinalVelocidad">Sentido:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa el sentido de la posicion final del objeto.">?</button>
-                        </label>
-
-                        <select id="sentidoPosicionFinalVelocidad">
-                            <option value="izquierda">Izquierda</option>
-                            <option value="derecha">Derecha</option>
-                        </select>
-                    </div>
-
-                    <div class="contenedorTiempo">
-                        <label for="tiempoVelocidad">Tiempo:
-                            <button class="ayuda-btn" data-mensaje="Ingresa cuánto tiempo duró el recorrido.">?</button>
-                        </label>
-                        <input type="number" id="tiempoVelocidad" placeholder="Tiempo">
-                        <label for="tiempoUnidadesVelocidad">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si el tiempo está en segundos, minutos u horas.">?</button>
-                        </label>
-                        <select id="tiempoUnidadesVelocidad">
-                            <option value="segundos">seg</option>
-                            <option value="minutos">min</option>
-                            <option value="horas">horas</option>
-                        </select>
-                    </div>
+        <!-- Sección de Fórmulas -->
+        <section class="container scroll-animate">
+            <h2>Fórmulas Fundamentales del MRU</h2>
+            <div class="formulas-grid">
+                <div class="formula-card fade-in-left">
+                    <h3>Posición</h3>
+                    <div class="formula">x = x₀ + v·t</div>
+                    <p>Donde:</p>
+                    <ul>
+                        <li><strong>x</strong> = Posición final</li>
+                        <li><strong>x₀</strong> = Posición inicial</li>
+                        <li><strong>v</strong> = Velocidad constante</li>
+                        <li><strong>t</strong> = Tiempo</li>
+                    </ul>
                 </div>
 
-
-            </div>
-
-            <div id="tiempoContenedor" style="display: none;">
-                <div class="contenedorDistanciaYVelocidadEnTiempo">
-                    <div class="contenedorDistancia">
-                        <label for="posicionInicialTiempo">Posicion Inicial:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa la posicion inicial del objeto. Puede estar en metros o kilómetros.">?</button>
-                        </label>
-
-                        <input type="number" id="posicionInicialTiempo" placeholder="Posicion Inicial">
-                        <label for="distanciaUnidadesTiempo">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
-                        </label>
-                        <select id="distanciaUnidadesTiempo">
-                            <option value="metros">m</option>
-                            <option value="kilometros">Km</option>
-                        </select>
-
-                        <label for="sentidoPosicionInicialTiempo">Sentido:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa el sentido de la posicion inicial del objeto.">?</button>
-                        </label>
-
-                        <select id="sentidoPosicionInicialTiempo">
-                            <option value="izquierda">Izquierda</option>
-                            <option value="derecha">Derecha</option>
-                        </select>
-
-                        <label for="posicionFinalTiempo">Posicion Final:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa la posicion final del objeto. Puede estar en metros o kilómetros.">?</button>
-                        </label>
-
-                        <input type="number" id="posicionFinalTiempo" placeholder="Posicion Final">
-                        <label for="distanciaUnidadesTiempo">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
-                        </label>
-                        <select id="distanciaUnidadesTiempo">
-                            <option value="metros">m</option>
-                            <option value="kilometros">Km</option>
-                        </select>
-
-                        <label for="sentidoPosicionFinalTiempo">Sentido:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa el sentido de la posicion final del objeto.">?</button>
-                        </label>
-
-                        <select id="sentidoPosicionFinalTiempo">
-                            <option value="izquierda">Izquierda</option>
-                            <option value="derecha">Derecha</option>
-                        </select>
-                    </div>
-
-                    <div class="contenedorVelocidadEnTiempo">
-                        <label for="velocidadTiempo">Velocidad:
-                            <button class="ayuda-btn" data-mensaje="Indica la velocidad del objeto.">?</button>
-                        </label>
-                        <input type="number" id="velocidadTiempo" placeholder="Velocidad">
-                        <label for="velocidadUnidadesTiempo">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si la velocidad está en metros por segundo o kilómetros por hora.">?</button>
-                        </label>
-
-                        <select id="velocidadUnidadesTiempo">
-                            <option value="metrosPorSegundo">m/s</option>
-                            <option value="kilometrosPorHora">Km/h</option>
-                        </select>
-                    </div>
+                <div class="formula-card fade-in-up delay-1">
+                    <h3>Velocidad</h3>
+                    <div class="formula">v = Δx/Δt</div>
+                    <p>Donde:</p>
+                    <ul>
+                        <li><strong>v</strong> = Velocidad</li>
+                        <li><strong>Δx</strong> = Desplazamiento</li>
+                        <li><strong>Δt</strong> = Intervalo de tiempo</li>
+                    </ul>
                 </div>
 
-            </div>
-
-            <div id="distanciaContenedor" style="display: none;">
-                <div class="contenedorVelocidadYTiempoEnDistancia">
-                    <div class="contenedorVelocidadDistancia">
-                        <label for="velocidadDistancia">Velocidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa la velocidad constante a la que se movió el objeto.">?</button>
-                        </label>
-                        <input type="number" id="velocidadDistancia" placeholder="Velocidad">
-                        <label for="velocidadUnidadesDistancia">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si la velocidad está en m/s o Km/h.">?</button>
-                        </label>
-                        <select id="velocidadUnidadesDistancia">
-                            <option value="metrosPorSegundo">m/s</option>
-                            <option value="kilometrosPorHora">Km/h</option>
-                        </select>
-
-                        <label for="sentidoVelocidadDistancia">Sentido:
-                            <button class="ayuda-btn" data-mensaje="Ingresa el sentido del objeto.">?</button>
-                        </label>
-
-                        <select id="sentidoVelocidadDistancia">
-                            <option value="izquierda">Izquierda</option>
-                            <option value="derecha">Derecha</option>
-                        </select>
-                    </div>
-
-                    <div class="contenedorTiempoDistancia">
-                        <label for="tiempoDistancia">Tiempo:
-                            <button class="ayuda-btn"
-                                data-mensaje="Ingresa el tiempo que duró el desplazamiento.">?</button>
-                        </label>
-                        <input type="number" id="tiempoDistancia" placeholder="Tiempo">
-                        <label for="tiempoUnidadesDistancia">Unidad:
-                            <button class="ayuda-btn"
-                                data-mensaje="Selecciona si el tiempo está en segundos, minutos u horas.">?</button>
-                        </label>
-                        <select id="tiempoUnidadesDistancia">
-                            <option value="segundos">seg</option>
-                            <option value="minutos">min</option>
-                            <option value="horas">horas</option>
-                        </select>
-                    </div>
+                <div class="formula-card fade-in-right">
+                    <h3>Desplazamiento</h3>
+                    <div class="formula">Δx = v·t</div>
+                    <p>Donde:</p>
+                    <ul>
+                        <li><strong>Δx</strong> = Desplazamiento</li>
+                        <li><strong>v</strong> = Velocidad constante</li>
+                        <li><strong>t</strong> = Tiempo transcurrido</li>
+                    </ul>
                 </div>
+            </div>
         </section>
 
-        </div>
+        <!-- Sección de Conceptos -->
+        <section class="container scroll-animate">
+            <h2>¿Qué es el Movimiento Rectilíneo Uniforme?</h2>
+            <div class="concept-grid">
+                <div class="concept-card fade-in-left delay-1">
+                    <div class="concept-icon">📏</div>
+                    <h3>Rectilíneo</h3>
+                    <p>El objeto se mueve en línea recta, siguiendo una trayectoria rectilínea sin desviaciones.</p>
+                </div>
 
-        <div class="botones">
-            <button id="calcular">Calcular</button>
-            <button id="limpiar">Limpiar</button>
-        </div>
+                <div class="concept-card fade-in-up delay-2">
+                    <div class="concept-icon">⚡</div>
+                    <h3>Uniforme</h3>
+                    <p>La velocidad permanece constante durante todo el movimiento. No hay aceleración.</p>
+                </div>
 
-
-        <div class="resultado">
-            <h3>El resultado es:</h3>
-            <p id="resultado">Aqui se mostrará el resultado</p>
-            <div id="graficasVelocidadDesplazamientoTiempo">
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-                <canvas id="grafico"></canvas>
-                <div id="contenedorRepresentacion"></div>
+                <div class="concept-card fade-in-right delay-3">
+                    <div class="concept-icon">⏱️</div>
+                    <h3>Tiempo</h3>
+                    <p>El desplazamiento es directamente proporcional al tiempo transcurrido.</p>
+                </div>
             </div>
-        </div>
+        </section>
 
+        <!-- Características del MRU -->
+        <section class="container scroll-animate">
+            <h2>Características Principales</h2>
+            <div class="features-list">
+                <div class="feature-item fade-in-up delay-1">
+                    <div class="feature-number">1</div>
+                    <div class="feature-content">
+                        <h3>Velocidad Constante</h3>
+                        <p>La velocidad no cambia en magnitud ni dirección durante el movimiento.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item fade-in-up delay-2">
+                    <div class="feature-number">2</div>
+                    <div class="feature-content">
+                        <h3>Aceleración Nula</h3>
+                        <p>Como la velocidad es constante, la aceleración es igual a cero (a = 0).</p>
+                    </div>
+                </div>
+
+                <div class="feature-item fade-in-up delay-3">
+                    <div class="feature-number">3</div>
+                    <div class="feature-content">
+                        <h3>Gráfica Lineal</h3>
+                        <p>La gráfica posición vs tiempo es una línea recta con pendiente igual a la velocidad.</p>
+                    </div>
+                </div>
+
+                <div class="feature-item fade-in-up delay-4">
+                    <div class="feature-number">4</div>
+                    <div class="feature-content">
+                        <h3>Proporcionalidad</h3>
+                        <p>El desplazamiento es directamente proporcional al tiempo transcurrido.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejemplos Prácticos -->
+        <section class="container scroll-animate">
+            <h2>Ejemplos en la Vida Real</h2>
+            <div class="examples-grid">
+                <div class="example-card fade-in-left">
+                    <div class="example-image">🚗</div>
+                    <h3>Automóvil en Autopista</h3>
+                    <p>Un coche que mantiene velocidad constante de 100 km/h en una autopista recta.</p>
+                </div>
+
+                <div class="example-card fade-in-up delay-1">
+                    <div class="example-image">🚂</div>
+                    <h3>Tren de Pasajeros</h3>
+                    <p>Un tren que viaja a velocidad constante entre estaciones en vías rectas.</p>
+                </div>
+
+                <div class="example-card fade-in-right delay-2">
+                    <div class="example-image">✈️</div>
+                    <h3>Avión en Crucero</h3>
+                    <p>Una aeronave manteniendo altitud y velocidad constante durante el vuelo.</p>
+                </div>
+
+                <div class="example-card fade-in-left delay-3">
+                    <div class="example-image">🏃</div>
+                    <h3>Corredor Experimentado</h3>
+                    <p>Un atleta que mantiene un ritmo constante durante una carrera de larga distancia.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Conversiones Útiles -->
+        <section class="container scroll-animate">
+            <h2>Conversiones Útiles</h2>
+            <div class="conversions-grid">
+                <div class="conversion-card fade-in-up">
+                    <h3>Velocidad</h3>
+                    <div class="conversion-formula">
+                        <p><strong>km/h a m/s:</strong> dividir entre 3.6</p>
+                        <br>
+                        <p><strong>m/s a km/h:</strong> multiplicar por 3.6</p>
+                    </div>
+                    <div class="conversion-example">
+                        <p><em>Ejemplo:</em> 72 km/h = 72 ÷ 3.6 = 20 m/s</p>
+                    </div>
+                </div>
+
+                <div class="conversion-card fade-in-up delay-1">
+                    <h3>Distancia</h3>
+                    <div class="conversion-formula">
+                        <p><strong>km a m:</strong> multiplicar por 1000</p>
+                        <br>
+                        <p><strong>m a km:</strong> dividir entre 1000</p>
+                    </div>
+                    <div class="conversion-example">
+                        <p><em>Ejemplo:</em> 2.5 km = 2.5 × 1000 = 2500 m</p>
+                    </div>
+                </div>
+
+                <div class="conversion-card fade-in-up delay-2">
+                    <h3>Tiempo</h3>
+                    <div class="conversion-formula">
+                        <p><strong>h a min:</strong> multiplicar por 60</p>
+                        <br>
+                        <p><strong>min a s:</strong> multiplicar por 60</p>
+                    </div>
+                    <div class="conversion-example">
+                        <p><em>Ejemplo:</em> 1.5 h = 1.5 × 60 = 90 min</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section scroll-animate">
+            <div class="cta-content fade-in-up">
+                <h2>¡Comienza a Practicar!</h2>
+                <p>Utiliza nuestras herramientas interactivas para resolver problemas de MRU y simular encuentros entre móviles.</p>
+                <div class="cta-buttons">
+                    <a href="./index.html" class="btn-primary">Resolver Problemas</a>
+                    <a href="./Encuentros.html" class="btn-secondary">Simular Encuentros</a>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <footer class="scroll-animate">
+        <div class="footer-content fade-in-up">
+            <p>&copy; 2024 Simulador MRU. Herramienta educativa para el aprendizaje de física.</p>
+        </div>
+    </footer>
+
+    <script src="./js/animations.js"></script>
+    <script>
+        // Animación del objeto en el hero
+        let time = 0;
+        let velocity = 25; // m/s
+        let initialPosition = 0;
+        
+        function animateHeroMRU() {
+            const object = document.getElementById('heroObject');
+            const velocityDisplay = document.getElementById('velocityDisplay');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const positionDisplay = document.getElementById('positionDisplay');
+            
+            // Calcular posición usando la fórmula del MRU: x = x₀ + v*t
+            const position = initialPosition + velocity * time;
+            
+            // Mover el objeto (escala: 1 pixel = 1 metro)
+            const pixelPosition = (position % 200); // Reiniciar cada 200m
+            object.style.left = pixelPosition + 'px';
+            
+            // Actualizar displays
+            velocityDisplay.textContent = `v = ${velocity} m/s`;
+            timeDisplay.textContent = `t = ${time.toFixed(1)} s`;
+            positionDisplay.textContent = `x = ${position.toFixed(0)} m`;
+            
+            // Incrementar tiempo
+            time += 0.1;
+            
+            // Reiniciar después de 8 segundos
+            if (time > 8) {
+                time = 0;
+            }
+        }
+        
+        // Iniciar animación cuando la página carga
+        document.addEventListener('DOMContentLoaded', () => {
+            setInterval(animateHeroMRU, 100); // Actualizar cada 100ms
+        });
+    </script>
 </body>
-<script src="./js/main.js"></script>
 
 </html>

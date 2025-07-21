@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+   <meta name="viewport" content="">
+    <title>SimuladorMRU</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Simulador De MRU</h1>
+        </div>
+        <nav>
+            <a href="./index.html">Inicio</a>
+            <a href="./problemas.html">Problemas MRU</a>
+            <a href="./Encuentros.html">Problemas de Encuentro</a>
+        </nav>
+    </header>
+    <section class="hero">
+        <div>
+            <h2>Problemas MRU</h2>
+            <p>Aquí podras realizar tus calculos para los problemas de MRU</p>
+        </div>
+    </section>
+    <main>
+        <div class="container">
+            <div class="subtitle">
+                <h2>Selecciona que calculo deseas</h2>
+                <button class="ayuda-btn" data-mensaje="Aquí seleccionaras el cálculo que deseas realizar">?</button>
+            </div>
+            <input class="radioMRU" type="radio" id="velocidadRadios" name="calculos" value="velocidad" class="radios" checked>
+            <label for="velocidad">Velocidad</label>
+            <input class="radioMRU" type="radio" id="tiempoRadios" name="calculos" value="tiempo" class="radios">
+            <label for="tiempo">Tiempo</label>
+            <input class="radioMRU" type="radio" id="distanciaRadios" name="calculos" value="distancia" class="radios">
+            <label for="desplazamiento">Desplazamiento</label>
+
+        </div>
+
+        <section class="calculos">
+            <div class="subtitle">
+                <h2>Ingrese los datos para realizar el calculo</h2>
+                <button class="ayuda-btn"
+                    data-mensaje="Aquí ingresaras los datos para realizar el cálculo, puedes ingresar los datos en metros o kilómetros, si necesitas más información haz clic en el botón de ayuda de cada dato">?</button>
+            </div>
+
+            <div id="velocidadContenedor" style="display: flex;">
+                <div class="contenedorDistanciaYTiempoEnVelocidad">
+                    <div class="contenedorDistancia">
+                        <label for="posicionInicialVelocidad">Posicion Inicial:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa la posicion inicial del objeto. Puede estar en metros o kilómetros.">?</button>
+                        </label>
+
+                        <input type="number" id="posicionInicialVelocidad" placeholder="Posicion Inicial">
+                        <label for="distanciaUnidadesVelocidad">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
+                        </label>
+                        <select id="distanciaUnidadesVelocidad">
+                            <option value="metros">m</option>
+                            <option value="kilometros">Km</option>
+                        </select>
+
+                        <label for="sentidoPosicionInicialVelocidad">Sentido:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa el sentido de la posicion inicial del objeto.">?</button>
+                        </label>
+
+                        <select id="sentidoPosicionInicialVelocidad">
+                            <option value="izquierda">Izquierda</option>
+                            <option value="derecha">Derecha</option>
+                        </select>
+
+                        <label for="posicionFinalVelocidad">Posicion Final:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa la posicion final del objeto. Puede estar en metros o kilómetros.">?</button>
+                        </label>
+
+                        <input type="number" id="posicionFinalVelocidad" placeholder="Posicion Final">
+                        <label for="distanciaUnidadesVelocidad">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
+                        </label>
+                        <select id="distanciaUnidadesVelocidad">
+                            <option value="metros">m</option>
+                            <option value="kilometros">Km</option>
+                        </select>
+
+                        <label for="sentidoPosicionFinalVelocidad">Sentido:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa el sentido de la posicion final del objeto.">?</button>
+                        </label>
+
+                        <select id="sentidoPosicionFinalVelocidad">
+                            <option value="izquierda">Izquierda</option>
+                            <option value="derecha">Derecha</option>
+                        </select>
+                    </div>
+
+                    <div class="contenedorTiempo">
+                        <label for="tiempoVelocidad">Tiempo:
+                            <button class="ayuda-btn" data-mensaje="Ingresa cuánto tiempo duró el recorrido.">?</button>
+                        </label>
+                        <input type="number" id="tiempoVelocidad" placeholder="Tiempo">
+                        <label for="tiempoUnidadesVelocidad">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si el tiempo está en segundos, minutos u horas.">?</button>
+                        </label>
+                        <select id="tiempoUnidadesVelocidad">
+                            <option value="segundos">seg</option>
+                            <option value="minutos">min</option>
+                            <option value="horas">horas</option>
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div id="tiempoContenedor" style="display: none;">
+                <div class="contenedorDistanciaYVelocidadEnTiempo">
+                    <div class="contenedorDistancia">
+                        <label for="posicionInicialTiempo">Posicion Inicial:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa la posicion inicial del objeto. Puede estar en metros o kilómetros.">?</button>
+                        </label>
+
+                        <input type="number" id="posicionInicialTiempo" placeholder="Posicion Inicial">
+                        <label for="distanciaUnidadesTiempo">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
+                        </label>
+                        <select id="distanciaUnidadesTiempo">
+                            <option value="metros">m</option>
+                            <option value="kilometros">Km</option>
+                        </select>
+
+                        <label for="sentidoPosicionInicialTiempo">Sentido:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa el sentido de la posicion inicial del objeto.">?</button>
+                        </label>
+
+                        <select id="sentidoPosicionInicialTiempo">
+                            <option value="izquierda">Izquierda</option>
+                            <option value="derecha">Derecha</option>
+                        </select>
+
+                        <label for="posicionFinalTiempo">Posicion Final:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa la posicion final del objeto. Puede estar en metros o kilómetros.">?</button>
+                        </label>
+
+                        <input type="number" id="posicionFinalTiempo" placeholder="Posicion Final">
+                        <label for="distanciaUnidadesTiempo">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si la distancia está en metros o kilómetros.">?</button>
+                        </label>
+                        <select id="distanciaUnidadesTiempo">
+                            <option value="metros">m</option>
+                            <option value="kilometros">Km</option>
+                        </select>
+
+                        <label for="sentidoPosicionFinalTiempo">Sentido:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa el sentido de la posicion final del objeto.">?</button>
+                        </label>
+
+                        <select id="sentidoPosicionFinalTiempo">
+                            <option value="izquierda">Izquierda</option>
+                            <option value="derecha">Derecha</option>
+                        </select>
+                    </div>
+
+                    <div class="contenedorVelocidadEnTiempo">
+                        <label for="velocidadTiempo">Velocidad:
+                            <button class="ayuda-btn" data-mensaje="Indica la velocidad del objeto.">?</button>
+                        </label>
+                        <input type="number" id="velocidadTiempo" placeholder="Velocidad">
+                        <label for="velocidadUnidadesTiempo">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si la velocidad está en metros por segundo o kilómetros por hora.">?</button>
+                        </label>
+
+                        <select id="velocidadUnidadesTiempo">
+                            <option value="metrosPorSegundo">m/s</option>
+                            <option value="kilometrosPorHora">Km/h</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="distanciaContenedor" style="display: none;">
+                <div class="contenedorVelocidadYTiempoEnDistancia">
+                    <div class="contenedorVelocidadDistancia">
+                        <label for="velocidadDistancia">Velocidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa la velocidad constante a la que se movió el objeto.">?</button>
+                        </label>
+                        <input type="number" id="velocidadDistancia" placeholder="Velocidad">
+                        <label for="velocidadUnidadesDistancia">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si la velocidad está en m/s o Km/h.">?</button>
+                        </label>
+                        <select id="velocidadUnidadesDistancia">
+                            <option value="metrosPorSegundo">m/s</option>
+                            <option value="kilometrosPorHora">Km/h</option>
+                        </select>
+
+                        <label for="sentidoVelocidadDistancia">Sentido:
+                            <button class="ayuda-btn" data-mensaje="Ingresa el sentido del objeto.">?</button>
+                        </label>
+
+                        <select id="sentidoVelocidadDistancia">
+                            <option value="izquierda">Izquierda</option>
+                            <option value="derecha">Derecha</option>
+                        </select>
+                    </div>
+
+                    <div class="contenedorTiempoDistancia">
+                        <label for="tiempoDistancia">Tiempo:
+                            <button class="ayuda-btn"
+                                data-mensaje="Ingresa el tiempo que duró el desplazamiento.">?</button>
+                        </label>
+                        <input type="number" id="tiempoDistancia" placeholder="Tiempo">
+                        <label for="tiempoUnidadesDistancia">Unidad:
+                            <button class="ayuda-btn"
+                                data-mensaje="Selecciona si el tiempo está en segundos, minutos u horas.">?</button>
+                        </label>
+                        <select id="tiempoUnidadesDistancia">
+                            <option value="segundos">seg</option>
+                            <option value="minutos">min</option>
+                            <option value="horas">horas</option>
+                        </select>
+                    </div>
+                </div>
+        </section>
+
+        </div>
+
+        <div class="botones">
+            <button id="calcular">Calcular</button>
+            <button id="limpiar">Limpiar</button>
+        </div>
+
+
+        <div class="resultado">
+            <h3>El resultado es:</h3>
+            <p id="resultado">Aqui se mostrará el resultado</p>
+            <div id="graficasVelocidadDesplazamientoTiempo">
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+                <canvas id="grafico"></canvas>
+                <div id="contenedorRepresentacion"></div>
+            </div>
+        </div>
+
+    </main>
+</body>
+<script src="./js/main.js"></script>
+
+</html>
